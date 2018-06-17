@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Resume - Start Bootstrap Theme</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="vendor/bootstrap/css/form-style.css" rel="stylesheet">
+    <!-- Custom fonts for this template -->
+    <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
+    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="vendor/devicons/css/devicons.min.css" rel="stylesheet">
+    <link href="vendor/simple-line-icons/css/simple-line-icons.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/resume.min.css" rel="stylesheet">
+
+  </head>
+
+  <body id="page-top" ng-app="myApp">
+    
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
+        <h2 class="mb-5">Contranager</h2>
+        <h3 class="mb-0">Your business assistant</h3>
+        <span class="d-none d-lg-block">
+            <img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="img/profile.png" alt="">
+        </span>
+      <a class="navbar-brand js-scroll-trigger" href="#page-top">
+        <span class="d-none d-lg-block">
+        </span>
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#contracts">Contracts</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#partners">Partners</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#users">Users</a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#statistics">Statistics</a>
+            </li>
+        </ul>
+      </div>
+    </nav>
+
+      <section class="resume-section p-3 p-lg-5 d-flex d-column" id="contracts">
+        <div class="my-auto" ng-controller="modalContractFormController">
+          <h2 class="mb-5">Contracts</h2>
+          <br>
+          <div class="container" ng-controller="contractsController">   
+              <table class="table table-striped">
+                <thead>
+                    <tr> <input class="form-control" type="text" placeholder="Search" aria-label="Search" ng-model="searchKeyword"> &nbsp</tr>
+                  <tr >
+                    <th>Contract Number</th>
+                    <th>Subject</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Value</th>
+                    <th>Currency</th>
+                    <th>Partner</th>
+                    <th><button type="button" class="btn btn-default" ng-click="showEmptyForm()">Add</button></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="x in names | filter: searchKeyword" style="cursor: pointer;">
+                      <td ng-click="showPdf(x.document)">{{x.noContract}}</td>
+                      <td ng-click="showPdf(x.document)">{{x.subject}}</td>
+                      <td ng-click="showPdf(x.document)">{{x.startDate[2]}}/{{x.startDate[1]}}/{{x.startDate[0]}}</td>
+                      <td ng-click="showPdf(x.document)">{{x.endDate[2]}}/{{x.endDate[1]}}/{{x.endDate[0]}}</td>
+                      <td ng-click="showPdf(x.document)">{{x.value}}</td>
+                      <td ng-click="showPdf(x.document)">{{x.currency}}</td>
+                      <td ng-click="showPdf(x.document)">{{x.partnerName}} </td>
+                      <td><button type="button" class="btn" ng-click="showForm(x)">Edit</button></td>
+                      <td><button type="button" class="btn" ng-click="removeRow(x.noContract)">Delete</button></td>
+                      
+                  </tr>
+          
+                </tbody>
+              </table>
+            </div>
+        </div>
+      </section>
+
+      <section class="resume-section p-3 p-lg-5 d-flex flex-column" id="partners">
+        <div class="my-auto" ng-controller="modalPartnerFormController">
+          <h2 class="mb-5">Partners</h2>
+          <br>
+          <div class="container" ng-controller="partnersController">   
+              <table class="table table-striped">
+                <thead>
+                  <tr> <input class="form-control" type="text" placeholder="Search" aria-label="Search" ng-model="searchKeyword"> &nbsp</tr>
+                  <tr>
+                    <th>CUI</th>
+                    <th>Name</th>
+                    <th>City</th>
+                    <th>Contact name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th><button type="button" class="btn btn-default" ng-click="showEmptyForm()">Add</button></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="x in names | filter: searchKeyword">
+                      <td>{{x.cui}}</td>
+                      <td>{{x.name}}</td>
+                      <td>{{x.city}}</td>
+                      <td>{{x.contactName}}</td>
+                      <td>{{x.email}}</td>
+                      <td>{{x.phone}}</td>
+                      <td><button type="button" class="btn" ng-click="showForm(x)">Edit</button></td>
+                      <td><button type="button" class="btn" ng-click="removeRow(x.cui)">Delete</button></td>
+                      
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+        </div>
+
+      </section>
+
+      <section class="resume-section p-3 p-lg-5 d-flex flex-column" id="users">
+        <div class="my-auto" ng-controller="modalAccountFormController">
+          <h2 class="mb-5">Users</h2>
+          <br>
+          <div class="container" ng-controller="usersController">   
+              <table class="table table-striped">
+                <thead>
+                  <tr> <input class="form-control" type="text" placeholder="Search" aria-label="Search" ng-model="searchKeyword"> &nbsp</tr>
+                  <tr>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Department</th>
+                    <th>Email</th>
+                    <th>Admin</th>
+                    <th><button type="button" class="btn btn-default" ng-click="showEmptyForm()">Add</button></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="x in names | filter: searchKeyword" >
+                      <td>{{x.name}}</td>
+                      <td>{{x.phone}}</td>
+                      <td>{{x.department}}</td>
+                      <td>{{x.email}}</td>
+                      <td>{{x.admin}}</td>
+                      <td><button type="button" class="btn" ng-click="showForm(x)">Edit</button></td>
+                      <td><button type="button" class="btn" ng-click="removeRow(x.phone)">Delete</button></td>
+                      
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+        </div>
+      </section>
+      <section class="resume-section p-3 p-lg-5 d-flex flex-column" id="statistics">
+          <div class="my-auto">
+            <h2 class="mb-5">Statistics</h2>
+            <table>
+              <tbody>
+                <td>
+                  <canvas id="barChart"></canvas>
+                </td>
+                <td>
+                    <canvas id="barChart2"></canvas>
+                </td>
+                <td>
+                    <canvas id="barChart3"></canvas>
+                </td>
+              </tbody>
+            </table>  
+          </div>
+        </section>
+  
+
+    </div>
+    
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="Chart.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="node_modules\angular\angular.js"></script>
+    <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.9.0.js"></script>
+    <script src="js\charts.js"></script>
+    <script src="js\contracts.js"></script>
+  
+    <!-- Custom scripts for this template -->
+   
+    <script src="js/resume.min.js"></script>
+   
+  </body>
+
+</html>

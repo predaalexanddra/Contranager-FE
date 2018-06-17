@@ -1,0 +1,79 @@
+<div class="modal-header">
+        <h3>Contract Form</h3>
+    </div>
+    <form name="form.userForm" ng-submit="submitForm()" enctype="multipart/form-data" novalidate>
+        <div class="modal-body">
+            <!-- CONTRACT NUMBER -->
+            <div class="form-group">
+                <label>Contract number</label>
+                <input type="text" name="noContract" class="form-control" ng-model="noContract" required>
+                <p ng-show="form.userForm.noContract.$invalid && !form.userForm.noContract.$pristine" class="help-block">Contract number is required.</p>
+            </div>
+
+            <!-- SUBJECT -->
+            <div class="form-group">
+                    <label>Subject</label>
+                    <input type="text" name="subject" class="form-control" ng-model="subject" required>
+                    <p ng-show="form.userForm.subject.$invalid && !form.userForm.subject.$pristine" class="help-block">Subject is required.</p>
+            </div>
+    
+            <!-- START DATE -->
+            <div class="form-group">
+                <label>Start Date</label>
+                <input type="date" name="startDate" class="form-control" ng-model="startDate" min="2000-01-02"required>
+                <p ng-show="form.userForm.startDate.$invalid && !form.userForm.startDate.$pristine" class="help-block">Start date is required.</p>
+            </div>
+    
+            <!-- END DATE -->
+            <div class="form-group">
+                <label>End date</label>
+                <input type="date" name="endDate" class="form-control" ng-model="endDate" required>
+                <p ng-show="form.userForm.endDate.$invalid && !form.userForm.endDate.$pristine" class="help-block">End date is required.</p>
+            </div>
+
+            <!-- VALUE -->
+            <div class="form-group">
+                    <label>Value</label>
+                    <input type="number" name="value" class="form-control" ng-model="value" required>
+                    <p ng-show="form.userForm.value.$invalid && !form.userForm.value.$pristine" class="help-block">Value is required.</p>
+            </div>
+
+            <!-- CURRENCY -->
+            <div class="form-group">
+                    <label>Currency</label>
+                    <select type="text" name="currency" class="form-control" ng-model="currency" required>
+                        <option>RON</option>
+                        <option>EURO</option>
+                        <option>DOLLAR</option>
+                    </select>
+                    <p ng-show="form.userForm.currency.$invalid && !form.userForm.currency.$pristine" class="help-block">Currency is required.</p>
+            </div>
+
+              <!-- CONTRACT TYPE -->
+              <div class="form-group" ng-controller="contractTypesController">
+                    <label>Contract type</label>
+                    <select type="text" name="contractType" class="form-control" ng-model="contractType" ng-options="x for x in types" required></select>
+                    <p ng-show="form.contractType.street.$invalid && !form.userForm.contractType.$pristine" class="help-block">Contract type is required.</p>
+             </div>
+
+             <!-- PARTNER -->
+             <div class="form-group" ng-controller="partnersNamesController">
+                    <label>Partner</label>
+                    <select type="text" name="partner" class="form-control" ng-model="partner" ng-options="x for x in partners" required></select>
+                    <p ng-show="form.userForm.partner.$invalid && !form.userForm.partner.$pristine" class="help-block">Partner is required.</p>
+            </div>
+
+            <!-- DOCUMENT -->
+            <div class="form-group">
+                    <label>Document </label>
+                    <input type="file" name="document" class="form-control" ng-model="document" onchange="angular.element(this).scope().fileNameChanged(this)">
+                    <p ng-show="form.userForm.document.$invalid && !form.userForm.document.$pristine" class="help-block">Document is required.</p>
+            </div>
+
+    
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" ng-disabled="form.userForm.$invalid">OK</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>
+    </form>
