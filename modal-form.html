@@ -1,5 +1,5 @@
 <div class="modal-header">
-        <h3>Add A New User</h3>
+        <h3>User Form</h3>
     </div>
     <form name="form.userForm" ng-submit="submitForm()" novalidate>
         <div class="modal-body">
@@ -42,7 +42,7 @@
             <!-- DEPARTMENT-->
             <div class="form-group" ng-controller="departmentsController">
                     <label>Department</label>
-                    <select type="text" name="department" class="form-control" ng-model="department" ng-options="x for x in departments" required></select>
+                    <select type="text" name="department" class="form-control" style="height:35px;" ng-model="department" ng-options="x for x in departments" required></select>
                     <p ng-show="form.userForm.department.$invalid && !form.userForm.department.$pristine" class="help-block">Department is required.</p>
             </div>
 

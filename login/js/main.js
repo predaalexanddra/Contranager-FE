@@ -14,10 +14,13 @@
                   'Content-Type': 'application/json'
                 }
               }).then(res => res.json())
-              .catch(error => $window.alert("Incorrect password!"))
+              .catch(error => $window.alert("Incorrect username or password!"))
               .then(response =>{
                   $scope.role=response.role; 
                   console.log('Succes:',$scope.role);
+                  $window.sessionStorage['role'] = $scope.role;
+                  $window.location = "/contranager";
+                  
             });
         }
     });
@@ -66,7 +69,7 @@ var ModalInstanceCtrl = function ($scope, $window, $modalInstance, userForm) {
                   'Content-Type': 'application/json'
                 }
               }).then(res => res.json())
-              .catch(error => $window.alert("Incorrect password!"))
+              .catch(error => $window.alert("Incorrect username or password!"))
               .then(response =>{
                   $window.alert("New password saved.")
             });

@@ -8,11 +8,15 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Resume - Start Bootstrap Theme</title>
+    <title>Contranager</title>
 
     <!-- Bootstrap core CSS -->
+   
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="vendor/bootstrap/css/form-style.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    
+   
     <!-- Custom fonts for this template -->
     <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:100,200,300,400,500,600,700,800,900" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
@@ -27,7 +31,8 @@
 
   <body id="page-top" ng-app="myApp">
     
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
+    <div ng-controller="NavigationController as navigationCtrl">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
         <h2 class="mb-5">Contranager</h2>
         <h3 class="mb-0">Your business assistant</h3>
         <span class="d-none d-lg-block">
@@ -57,7 +62,8 @@
         </ul>
       </div>
     </nav>
-
+    <a ng-click="navigationCtrl.logout()" style="float:right; margin-top: 25px; padding-right:20px; cursor: pointer;">Logout<span class="glyphicon glyphicon-user" ></span></a>
+    </div>
       <section class="resume-section p-3 p-lg-5 d-flex d-column" id="contracts">
         <div class="my-auto" ng-controller="modalContractFormController">
           <h2 class="mb-5">Contracts</h2>
@@ -68,13 +74,14 @@
                     <tr> <input class="form-control" type="text" placeholder="Search" aria-label="Search" ng-model="searchKeyword"> &nbsp</tr>
                   <tr >
                     <th>Contract Number</th>
-                    <th>Subject</th>
+                    <th>Contract object</th>
                     <th>Start Date</th>
                     <th>End Date</th>
+                    <th>Status</th>
                     <th>Value</th>
                     <th>Currency</th>
                     <th>Partner</th>
-                    <th><button type="button" class="btn btn-default" ng-click="showEmptyForm()">Add</button></th>
+                    <th><button ng-show="role === 'admin'" type="button" class="btn btn-default" ng-click="showEmptyForm()">Add</button></th>
                     <th></th>
                   </tr>
                 </thead>
@@ -84,11 +91,12 @@
                       <td ng-click="showPdf(x.document)">{{x.subject}}</td>
                       <td ng-click="showPdf(x.document)">{{x.startDate[2]}}/{{x.startDate[1]}}/{{x.startDate[0]}}</td>
                       <td ng-click="showPdf(x.document)">{{x.endDate[2]}}/{{x.endDate[1]}}/{{x.endDate[0]}}</td>
+                      <td ng-style="{ color: x.status == 'Inactive' ? '#ff0000' : '#00cc00' }" ng-click="showPdf(x.document)">{{x.status}}</td>
                       <td ng-click="showPdf(x.document)">{{x.value}}</td>
                       <td ng-click="showPdf(x.document)">{{x.currency}}</td>
                       <td ng-click="showPdf(x.document)">{{x.partnerName}} </td>
-                      <td><button type="button" class="btn" ng-click="showForm(x)">Edit</button></td>
-                      <td><button type="button" class="btn" ng-click="removeRow(x.noContract)">Delete</button></td>
+                      <td><button type="button" class="btn"  ng-show="role === 'admin'" ng-click="showForm(x)">Edit</button></td>
+                      <td><button type="button" class="btn"  ng-show="role === 'admin'" ng-click="removeRow(x.noContract)">Archive</button></td>
                       
                   </tr>
           
@@ -113,7 +121,7 @@
                     <th>Contact name</th>
                     <th>Email</th>
                     <th>Phone</th>
-                    <th><button type="button" class="btn btn-default" ng-click="showEmptyForm()">Add</button></th>
+                    <th><button type="button" class="btn btn-default"  ng-show="role === 'admin'" ng-click="showEmptyForm()">Add</button></th>
                     <th></th>
                   </tr>
                 </thead>
@@ -125,8 +133,8 @@
                       <td>{{x.contactName}}</td>
                       <td>{{x.email}}</td>
                       <td>{{x.phone}}</td>
-                      <td><button type="button" class="btn" ng-click="showForm(x)">Edit</button></td>
-                      <td><button type="button" class="btn" ng-click="removeRow(x.cui)">Delete</button></td>
+                      <td><button type="button" class="btn"  ng-show="role === 'admin'" ng-click="showForm(x)">Edit</button></td>
+                      <td><button type="button" class="btn"  ng-show="role === 'admin'" ng-click="removeRow(x.cui)">Delete</button></td>
                       
                   </tr>
                 </tbody>
@@ -151,7 +159,7 @@
                     <th>Department</th>
                     <th>Email</th>
                     <th>Admin</th>
-                    <th><button type="button" class="btn btn-default" ng-click="showEmptyForm()">Add</button></th>
+                    <th><button type="button" class="btn btn-default"  ng-show="role === 'admin'" ng-click="showEmptyForm()">Add</button></th>
                     <th></th>
                   </tr>
                 </thead>
@@ -161,9 +169,9 @@
                       <td>{{x.phone}}</td>
                       <td>{{x.department}}</td>
                       <td>{{x.email}}</td>
-                      <td>{{x.admin}}</td>
-                      <td><button type="button" class="btn" ng-click="showForm(x)">Edit</button></td>
-                      <td><button type="button" class="btn" ng-click="removeRow(x.phone)">Delete</button></td>
+                      <td>{{x.isAdmin}}</td>
+                      <td><button type="button" class="btn"  ng-show="role === 'admin'" ng-click="showForm(x)">Edit</button></td>
+                      <td><button type="button" class="btn"  ng-show="role === 'admin'" ng-click="removeRow(x.phone)">Delete</button></td>
                       
                   </tr>
                 </tbody>
@@ -173,18 +181,42 @@
       </section>
       <section class="resume-section p-3 p-lg-5 d-flex flex-column" id="statistics">
           <div class="my-auto">
-            <h2 class="mb-5">Statistics</h2>
+            <h2 style="display:inline" class="mb-5">Statistics: </h2> <h2 style="display:inline;">Make your decision easier</h2>
+            <br>
             <table>
               <tbody>
+                <tr>
                 <td>
-                  <canvas id="barChart"></canvas>
+                  <canvas id="barChart" width="350" height="200"></canvas>
                 </td>
                 <td>
-                    <canvas id="barChart2"></canvas>
+                    <canvas id="barChart2" width="350" height="200"></canvas>
                 </td>
                 <td>
-                    <canvas id="barChart3"></canvas>
+                    <canvas id="barChart3" width="350" height="200"></canvas>
+                </td>                
+              </tr>
+              <br>
+              <tr>
+                <td> 
+                  <form class="form-group" style="display: inline-block;" >
+                    <label style="margin-left:55px">Choose a partner</label>
+                    <select style="height:35px; margin-left:55px"class="form-control" 
+                    style="width:120px" ng-change="sendPartner()" ng-model="partnerData"
+                    ng-options="x for x in partners" ng-controller="chartController"></select> 
+                    <label style="margin-left:55px">Choose a year</label>
+                    <select style="height:35px; margin-left:55px"class="form-control" 
+                    style="width:120px" ng-change="sendYear()" ng-model="yearData"
+                    ng-options="x for x in years" ng-controller="secondChartController"></select> 
+                  </form>
                 </td>
+                  <td >
+                      <canvas  id="line-chart" width="350" height="250"></canvas>
+                    </td>
+                    <td >
+                        <canvas  id="line-chart2" width="350" height="250"></canvas>
+                      </td>
+              </tr>
               </tbody>
             </table>  
           </div>
@@ -202,6 +234,7 @@
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
     <script src="node_modules\angular\angular.js"></script>
     <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.9.0.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.js"></script>
     <script src="js\charts.js"></script>
     <script src="js\contracts.js"></script>
   

@@ -41,7 +41,7 @@
             <!-- CURRENCY -->
             <div class="form-group">
                     <label>Currency</label>
-                    <select type="text" name="currency" class="form-control" ng-model="currency" required>
+                    <select type="text" name="currency" class="form-control" style="height:35px;"ng-model="currency" required>
                         <option>RON</option>
                         <option>EURO</option>
                         <option>DOLLAR</option>
@@ -52,14 +52,14 @@
               <!-- CONTRACT TYPE -->
               <div class="form-group" ng-controller="contractTypesController">
                     <label>Contract type</label>
-                    <select type="text" name="contractType" class="form-control" ng-model="contractType" ng-options="x for x in types" required></select>
+                    <select type="text" name="contractType" class="form-control" style="height:35px;" ng-model="contractType" ng-options="x for x in types" required></select>
                     <p ng-show="form.contractType.street.$invalid && !form.userForm.contractType.$pristine" class="help-block">Contract type is required.</p>
              </div>
 
              <!-- PARTNER -->
              <div class="form-group" ng-controller="partnersNamesController">
                     <label>Partner</label>
-                    <select type="text" name="partner" class="form-control" ng-model="partner" ng-options="x for x in partners" required></select>
+                    <select type="text" name="partner" class="form-control" style="height:35px;" ng-model="partner" ng-options="x for x in partners" required></select>
                     <p ng-show="form.userForm.partner.$invalid && !form.userForm.partner.$pristine" class="help-block">Partner is required.</p>
             </div>
 

@@ -1,5 +1,32 @@
 (function() {
-var app = angular.module('myApp', ['ui.bootstrap']);
+var app = angular.module('myApp', ['ui.bootstrap', 'ngRoute']);
+app.config(function($routeProvider) {
+    $routeProvider
+    .when("/", {
+      templateUrl : "index.html"
+    })
+    .when("/login", {
+      templateUrl : "login/index.html"
+    })
+  });
+
+app.run(['$rootScope', '$location', '$window', function ($rootScope, $location, $window) {
+    $rootScope.$on('$routeChangeStart', function (event) {
+
+        if ($window.sessionStorage['role'] !== 'admin' && $window.sessionStorage['role'] !== 'user' ) {
+            $window.location = "/contranager/login";
+        }
+    });
+}]);
+
+app.controller('NavigationController', function($scope, $http, $window) {
+    
+    this.logout = function() {
+        $window.sessionStorage['role'] = null;
+        $window.location = "/contranager/login";
+    }
+    
+});
 
 app.controller('contractsController', function($scope, $http, $window) {
     var findAll = function(response)
@@ -9,6 +36,8 @@ app.controller('contractsController', function($scope, $http, $window) {
     $http.get("http://localhost:8080/ordered")
     .then(findAll);
 
+    $scope.role = $window.sessionStorage['role'];
+    console.log('localStorage: ', $window.sessionStorage['role']);
     $scope.removeRow = function(number){				
 		var index = -1;		
 		var comArr = eval( $scope.names );
@@ -32,9 +61,35 @@ app.controller('contractsController', function($scope, $http, $window) {
     
 });
 
-app.controller("modalContractFormController", ['$scope', '$modal', '$log', '$http',
+app.controller("modalContractFormController", ['$scope', '$modal', '$log', '$http', '$window',
 
-    function ($scope, $modal, $log) {
+    function ($scope, $modal, $log, $http, $window) {
+
+              var findAll = function(response)
+    {
+        $scope.names = response.data;     
+    }
+    $http.get("http://localhost:8080/ordered")
+    .then(findAll);
+
+    $scope.role = $window.sessionStorage['role'];
+    console.log('localStorage: ', $window.sessionStorage['role']);
+    $scope.removeRow = function(number){				
+		var index = -1;		
+		var comArr = eval( $scope.names );
+		for( var i = 0; i < comArr.length; i++ ) {
+			if( comArr[i].noContract === number ) {
+				index = i;
+				break;
+			}
+		}
+		if( index === -1 ) {
+			alert( "Something gone wrong" );
+		}
+        $scope.names.splice( index, 1 );
+        $http.get("http://localhost:8080/deletecontract?no="+number)
+        .then(function(){$window.alert("Contract deleted")});	
+    };
 
         $scope.showForm = function (contract) {
             var modalInstance = $modal.open({
@@ -135,7 +190,10 @@ var ContractModalInstanceCtrl = function ($scope, $window,$modalInstance, userFo
                 headers:{
                   'Content-Type': 'application/json'
                 }
-              }).then(res => res.json())
+              }).then(function() {
+                  res => res.json();
+                  $window.location.reload();
+              })
               .catch(error => console.error('Error:', error))
               .then(response => $window.alert("Contract added"));
             $modalInstance.close('closed');
@@ -149,13 +207,13 @@ var ContractModalInstanceCtrl = function ($scope, $window,$modalInstance, userFo
 };
 
 app.controller('partnersController', function($scope, $http, $window) {
+    $scope.role = $window.sessionStorage['role'];
     var findAll = function(response)
     {
         $scope.names = response.data;     
     }
     $http.get("http://localhost:8080/partners")
     .then(findAll);
-
     $scope.removeRow = function(cui){				
 		var index = -1;		
 		var comArr = eval( $scope.names );
@@ -167,10 +225,11 @@ app.controller('partnersController', function($scope, $http, $window) {
 		}
 		if( index === -1 ) {
 			alert( "Something gone wrong" );
-		}
+        }
         $scope.names.splice( index, 1 );
+        var flag=false;
         $http.get("http://localhost:8080/deletepartner?cui="+cui)
-        .then(function(){$window.alert("Partner deleted")});	
+        .then(function(){$window.alert("Partner deleted"); flag=true;},function(){$window.alert("Patner can't be deleted")});	
 	};
 });
 
@@ -253,7 +312,7 @@ var PartnerModalInstanceCtrl = function ($scope,$window, $modalInstance, userFor
                 }
               }).then(res => res.json())
               .catch(error => console.error('Error:', error))
-              .then(response => $window.alert("Partner added"));
+              .then(response => {$window.alert("Partner added");$window.location.reload();});
             $modalInstance.close('closed');
         } else {
             console.log('userform is not in scope');
@@ -265,6 +324,7 @@ var PartnerModalInstanceCtrl = function ($scope,$window, $modalInstance, userFor
 };
 
 app.controller('usersController', function($scope, $http, $window) {
+    $scope.role = $window.sessionStorage['role'];
     var findAll = function(response)
     {
         $scope.names = response.data;     
@@ -351,6 +411,10 @@ var ModalInstanceCtrl = function ($scope,$window, $modalInstance, userForm) {
     $scope.form = {}
     $scope.submitForm = function () {
         if ($scope.form.userForm.$valid) {
+            var isAdmin='No';
+            if($scope.form.userForm.admin)
+                isAdmin="Yes";
+
             var dataObj={
                 cnp: $scope.form.userForm.cnp['$viewValue'],
                 name: $scope.form.userForm.name['$viewValue'],
@@ -358,7 +422,7 @@ var ModalInstanceCtrl = function ($scope,$window, $modalInstance, userForm) {
                 department:$scope.form.userForm.department['$viewValue'],
                 email:$scope.form.userForm.email['$viewValue'],
                 password:$scope.form.userForm.password['$viewValue'],
-                admin:$scope.form.userForm.admin['$viewValue']
+                admin:isAdmin
             }
             console.log(dataObj);
             fetch('http://localhost:8080/adduser', {
@@ -369,7 +433,7 @@ var ModalInstanceCtrl = function ($scope,$window, $modalInstance, userForm) {
                 }
               }).then(res => res.json())
               .catch(error => console.error('Error:', error))
-              .then(response => $window.alert("User added"));
+              .then(response =>{ $window.alert("User added"); $window.location.reload();});
             $modalInstance.close('closed');
         } else {
             console.log('userform is not in scope');
@@ -380,6 +444,96 @@ var ModalInstanceCtrl = function ($scope,$window, $modalInstance, userForm) {
     };
 };
 
+app.controller('chartController', function($scope, $http, $window) {
+    var findAll = function(response)
+    {
+        $scope.partners = response.data;     
+    }
+    $http.get("http://localhost:8080/partnersnames")
+    .then(findAll);
 
+    $scope.sendPartner= function(){
+        fetch('http://localhost:8080/getData', {
+            method: 'POST', 
+            body: $scope.partnerData, 
+            headers:{
+              'Content-Type': 'application/json'
+            }
+          }).then(function(response) {
+            return response.json();
+          })
+          .then(function(myJson) {
+            var ctxB4=document.getElementById("line-chart").getContext('2d');
+           
+            var lineChart=new Chart(ctxB4, {
+            type: 'line',
+            data: {
+                labels: myJson.years,
+                datasets: [{ 
+                    data: myJson.values,
+                    label: $scope.partnerData,
+                    borderColor: "#3e95cd",
+                    fill: false
+                }
+                ]
+            },
+             options: {
+                title: {
+                display: true,
+                text: 'Contracts values over years'
+                }
+            }
+          });
+        });
+    }
+
+   
+}); 
+
+app.controller('secondChartController', function($scope, $http, $window){
+
+    var findAll = function(response)
+    {
+        $scope.years = response.data;     
+    }
+    $http.get("http://localhost:8080/getyears")
+    .then(findAll);
+    
+    $scope.sendYear= function(){
+        fetch('http://localhost:8080/getbyyear', {
+            method: 'POST', 
+            body: String($scope.yearData), 
+            headers:{
+              'Content-Type': 'application/json'
+            }
+          }).then(function(response) {
+            return response.json();
+          })
+          .then(function(myJson) {
+            var ctxB5=document.getElementById("line-chart2").getContext('2d');
+           
+            var lineChart=new Chart(ctxB5, {
+            type: 'line',
+            data: {
+                labels: myJson.months,
+                datasets: [{ 
+                    data: myJson.values,
+                    label: $scope.yearData,
+                    borderColor: "#3e95cd",
+                    fill: false
+                }
+                ]
+            },
+             options: {
+                title: {
+                display: true,
+                text: 'Contracts values for one year'
+                }
+            }
+          });
+        });
+    }
+
+});
 
 })();

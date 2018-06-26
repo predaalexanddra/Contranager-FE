@@ -11,7 +11,7 @@ fetch('http://localhost:8080/chart1')
         data: {
             labels: myJson.contracts,
             datasets: [{
-                label: 'The most valuable contracts',
+                label: 'RON Value',
                 data: myJson.values,
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
@@ -33,6 +33,10 @@ fetch('http://localhost:8080/chart1')
             }]
         },
         options: {
+            title: {
+                display: true,
+                text: 'The most valuable contracts'
+                },
             scales: {
                 yAxes: [{
                     ticks: {
@@ -54,7 +58,7 @@ var myBarChart = new Chart(ctxB2, {
     data: {
         labels: myJson.years,
         datasets: [{
-            label: 'Contracts per year',
+            label: 'Number of contracts',
             data: myJson.counts,
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
@@ -76,6 +80,10 @@ var myBarChart = new Chart(ctxB2, {
         }]
     },
     options: {
+        title: {
+            display: true,
+            text: 'Concluded contracts per year'
+            },
         scales: {
             yAxes: [{
                 ticks: {
@@ -87,7 +95,6 @@ var myBarChart = new Chart(ctxB2, {
 });
 });
 
-
 fetch('http://localhost:8080/chart3')
 .then(function(response) {
     return response.json();
@@ -98,7 +105,7 @@ var myBarChart = new Chart(ctxB3, {
     data: {
         labels: myJson.partners,
         datasets: [{
-            label: 'Long-term partners',
+            label: 'Number of years',
             data: myJson.durations,
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
@@ -120,6 +127,10 @@ var myBarChart = new Chart(ctxB3, {
         }]
     },
     options: {
+        title: {
+            display: true,
+            text: 'Long-term contracts'
+            },
         scales: {
             yAxes: [{
                 ticks: {
